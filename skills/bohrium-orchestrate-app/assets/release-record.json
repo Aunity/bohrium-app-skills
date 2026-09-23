@@ -1,0 +1,44 @@
+{
+  "schema": "bohrium-release-record/v2",
+  "created_at": null,
+  "app": {
+    "name": null,
+    "type": null,
+    "version": null,
+    "adapter_version": null,
+    "algorithm_version": null
+  },
+  "identities": {
+    "source_revision": null,
+    "source_sha256": null,
+    "artifact_sha256": null,
+    "schema_sha256": null,
+    "previous_image": null,
+    "candidate_image": null,
+    "candidate_image_id": null,
+    "candidate_image_digest": null,
+    "rollback_image": null,
+    "node_id": null,
+    "project_id": null,
+    "image_test_job_id": null,
+    "app_page_job_id": null,
+    "api_job_id": null
+  },
+  "gates": {
+    "source_identity": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "local_tests": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "artifact_integrity": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "environment_inventory": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "node_assembly": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "snapshot_hygiene": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "immutable_image": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "image_runtime_tests": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "preview_or_proxy": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "app_page": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "api_e2e": {"required": false, "status": "pending", "evidence": [], "note": null},
+    "license": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "security": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "scientific_claims": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "rollback": {"required": true, "status": "pending", "evidence": [], "note": null}
+  }
+}

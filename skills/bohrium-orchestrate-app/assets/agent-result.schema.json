@@ -1,0 +1,393 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/bohrium/agent-result.schema.json",
+  "title": "Bohrium App Agent Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "task_id",
+    "attempt",
+    "role",
+    "stage",
+    "workflow_revision",
+    "status",
+    "summary",
+    "source_identity",
+    "files_changed",
+    "commands",
+    "external_mutations",
+    "gates",
+    "facts",
+    "decisions_needed",
+    "blockers",
+    "risks",
+    "next_actions",
+    "secret_review"
+  ],
+  "properties": {
+    "schema": {
+      "const": "bohrium-agent-result/v1"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "role": {
+      "enum": [
+        "discovery",
+        "adapter",
+        "reviewer",
+        "runtime",
+        "release_operator",
+        "console_handoff",
+        "app_acceptance",
+        "skillizer"
+      ]
+    },
+    "stage": {
+      "type": "string",
+      "pattern": "^S(?:[0-9]|1[0-2])(?:[._-][A-Za-z0-9._-]+)?$"
+    },
+    "workflow_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "enum": ["passed", "failed", "blocked", "partial"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "source_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "matches_task_spec"],
+      "properties": {
+        "before": {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        "after": {
+          "$ref": "#/$defs/sourceIdentity"
+        },
+        "matches_task_spec": {
+          "type": "boolean"
+        }
+      }
+    },
+    "files_changed": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/changedFile"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/commandEvidence"
+      }
+    },
+    "external_mutations": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/externalMutation"
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/gateResult"
+      }
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fact"
+      }
+    },
+    "decisions_needed": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blocker"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nextAction"
+      }
+    },
+    "secret_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["performed", "findings", "evidence_path"],
+      "properties": {
+        "performed": {
+          "const": true
+        },
+        "findings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_path": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "sha256", "dirty"],
+      "properties": {
+        "revision": {
+          "type": ["string", "null"]
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Fa-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dirty": {
+          "type": ["boolean", "null"]
+        }
+      }
+    },
+    "changedFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "purpose"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "commandEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "argv_redacted",
+        "exit_code",
+        "started_at",
+        "ended_at",
+        "evidence_path"
+      ],
+      "properties": {
+        "argv_redacted": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence_path": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "externalMutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "exact_target",
+        "authorization_id",
+        "effect_or_cost",
+        "resource_id",
+        "readback_status",
+        "rollback_or_recovery",
+        "evidence_path"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exact_target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authorization_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect_or_cost": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource_id": {
+          "type": ["string", "null"]
+        },
+        "readback_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rollback_or_recovery": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_path": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "gateResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "required", "status", "evidence", "reason"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.-]+$"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": ["passed", "failed", "blocked", "pending", "not_applicable"]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "evidence"],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "detail", "blocks_gate", "resolution"],
+      "properties": {
+        "type": {
+          "enum": [
+            "missing_input",
+            "identity_conflict",
+            "authorization",
+            "platform",
+            "test_failure",
+            "security",
+            "scientific"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocks_gate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "nextAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "required_role", "requires_authorization"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_role": {
+          "enum": [
+            "orchestrator",
+            "discovery",
+            "adapter",
+            "reviewer",
+            "runtime",
+            "release_operator",
+            "console_handoff",
+            "app_acceptance",
+            "skillizer",
+            "user"
+          ]
+        },
+        "requires_authorization": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

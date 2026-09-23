@@ -1,0 +1,72 @@
+{
+  "schema": "bohrium-app-workflow-state/v1",
+  "state_revision": 0,
+  "project": {
+    "name": null,
+    "repository": null,
+    "delivery_shape": null,
+    "app_key": null,
+    "target_visibility": "private"
+  },
+  "baseline": {
+    "source_revision": null,
+    "source_sha256": null,
+    "dirty_worktree": null,
+    "brief_path": "docs/bohrium/app-brief.md",
+    "release_record_path": "docs/bohrium/release-record.json"
+  },
+  "current_stage": "S0",
+  "orchestrator_run_id": null,
+  "active_assignments": [],
+  "locks": {
+    "paths": [],
+    "external_mutation": null,
+    "release_record": null
+  },
+  "human_checkpoint": null,
+  "last_reconciled_at": null,
+  "claims": {
+    "local_ready": false,
+    "node_ready": false,
+    "image_ready": false,
+    "app_ready": false,
+    "api_ready": false,
+    "release_ready": false,
+    "skill_ready": false
+  },
+  "stages": {
+    "S0": {"name": "bootstrap", "depends_on": [], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S1": {"name": "discovery_product_contract", "depends_on": ["S0"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S2": {"name": "runtime_inventory_fixtures", "depends_on": ["S1"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S3": {"name": "adapter_form_result_contract", "depends_on": ["S2"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S4": {"name": "local_acceptance", "depends_on": ["S3"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S5": {"name": "cpu_node_image_assembly", "depends_on": ["S4"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S6": {"name": "immutable_image", "depends_on": ["S5"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S7": {"name": "image_runtime_tests", "depends_on": ["S6"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S8": {"name": "app_draft_saved_configuration", "depends_on": ["S7"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S9": {"name": "app_page_acceptance", "depends_on": ["S8"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S10": {"name": "license_api_publication", "depends_on": ["S9"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S11": {"name": "app_specific_skill", "depends_on": ["S10"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S12": {"name": "closeout_operations", "depends_on": ["S11"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []}
+  },
+  "active_mutation": null,
+  "mutation_history": [],
+  "pending_authorizations": [],
+  "external_resources": {
+    "project_id": null,
+    "node_id": null,
+    "candidate_image_id": null,
+    "candidate_image": null,
+    "image_test_job_id": null,
+    "app_key": null,
+    "app_version": null,
+    "app_page_job_id": null,
+    "api_job_id": null
+  },
+  "decisions": [],
+  "known_limitations": [],
+  "blockers": [],
+  "latest_handoff": null,
+  "next_action": "Complete S0 baseline and evidence inventory.",
+  "updated_at": null
+}

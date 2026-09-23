@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bohrium App Developer"
+  short_description: "Plan, build, and validate Bohrium Apps"
+  default_prompt: "Use $bohrium-develop-app to plan and implement a Bohrium App from an existing scientific CLI or web service."

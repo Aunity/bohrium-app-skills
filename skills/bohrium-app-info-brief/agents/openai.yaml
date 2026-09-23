@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bohrium App Info Brief"
+  short_description: "Draft bilingual Bohrium App listing documents"
+  default_prompt: "Use $bohrium-app-info-brief to create a bilingual Bohrium App info markdown for my app."

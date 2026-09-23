@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bohrium App Orchestrator"
+  short_description: "Coordinate multi-agent Bohrium App delivery"
+  default_prompt: "Use $bohrium-orchestrate-app to coordinate this program from discovery through Bohrium release and App-specific skillization."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bohrium App Skill Builder"
+  short_description: "Build safe skills for published Bohrium Apps"
+  default_prompt: "Use $bohrium-create-app-skill to create a safe operation skill for a published Bohrium App."

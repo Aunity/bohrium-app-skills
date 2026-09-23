@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bohrium App Release"
+  short_description: "Audit and release Bohrium Apps safely"
+  default_prompt: "Use $bohrium-release-app to audit release readiness and plan a safe Bohrium App release."

@@ -1,0 +1,31 @@
+{
+  "repository": "bohrium-app-skills",
+  "defaultChannel": "stable",
+  "skills": [
+    {
+      "name": "bohrium-app-info-brief",
+      "channel": "stable",
+      "description": "Prepare bilingual Bohrium App listing and help content before implementation."
+    },
+    {
+      "name": "bohrium-create-app-skill",
+      "channel": "stable",
+      "description": "Create a reusable operation skill for a published Bohrium App."
+    },
+    {
+      "name": "bohrium-develop-app",
+      "channel": "stable",
+      "description": "Plan, implement, review, and validate Bohrium Apps before publication."
+    },
+    {
+      "name": "bohrium-orchestrate-app",
+      "channel": "stable",
+      "description": "Coordinate bounded agents across an end-to-end Bohrium App delivery."
+    },
+    {
+      "name": "bohrium-release-app",
+      "channel": "stable",
+      "description": "Audit, release, test, monitor, and recover controlled Bohrium App releases."
+    }
+  ]
+}

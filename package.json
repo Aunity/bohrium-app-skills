@@ -1,0 +1,25 @@
+{
+  "name": "bohrium-app-skills",
+  "version": "0.1.0",
+  "description": "Reusable Codex skills for planning, developing, releasing, and operating Bohrium Apps.",
+  "type": "module",
+  "bin": {
+    "bohrium-skills": "./bin/bohrium-skills.mjs"
+  },
+  "files": [
+    "skills",
+    "skill-manifest.json",
+    "bin",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "skills:list": "node ./bin/bohrium-skills.mjs list",
+    "skills:doctor": "node ./bin/bohrium-skills.mjs doctor",
+    "pack:check": "npm pack --dry-run"
+  },
+  "license": "UNLICENSED"
+}
