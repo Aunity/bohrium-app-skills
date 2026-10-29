@@ -1,5 +1,5 @@
 {
-  "schema": "bohrium-release-record/v2",
+  "schema": "bohrium-release-record/v3",
   "created_at": null,
   "app": {
     "name": null,
@@ -18,7 +18,7 @@
     "candidate_image_id": null,
     "candidate_image_digest": null,
     "rollback_image": null,
-    "node_id": null,
+    "build_id": null,
     "project_id": null,
     "image_test_job_id": null,
     "app_page_job_id": null,
@@ -29,8 +29,8 @@
     "local_tests": {"required": true, "status": "pending", "evidence": [], "note": null},
     "artifact_integrity": {"required": true, "status": "pending", "evidence": [], "note": null},
     "environment_inventory": {"required": true, "status": "pending", "evidence": [], "note": null},
-    "node_assembly": {"required": true, "status": "pending", "evidence": [], "note": null},
-    "snapshot_hygiene": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "image_build": {"required": true, "status": "pending", "evidence": [], "note": null},
+    "image_push": {"required": true, "status": "pending", "evidence": [], "note": null},
     "immutable_image": {"required": true, "status": "pending", "evidence": [], "note": null},
     "image_runtime_tests": {"required": true, "status": "pending", "evidence": [], "note": null},
     "preview_or_proxy": {"required": true, "status": "pending", "evidence": [], "note": null},

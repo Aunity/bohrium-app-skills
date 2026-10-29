@@ -112,7 +112,7 @@ TASK_SPEC:
 - 创建或修改 Node、镜像、Job、App、License、价格或公开状态；
 - 使用 shell 字符串拼接用户输入；
 - 暴露执行路径、调度、凭证或任意 raw override；
-- 声明 node-ready、image-ready、app-ready、api-ready 或 release-ready。
+- 声明 image-ready、app-ready、api-ready 或 release-ready。
 
 执行要求：
 1. 科学核心与 Bohrium 层分离。
@@ -159,7 +159,7 @@ TASK_SPEC:
 - 修改被审代码、Schema、brief、workflow state 或 release record；
 - 执行任何外部变更；
 - 用 Worker summary 代替实际文件和命令证据；
-- 用本地测试或 CPU Node 组装检查代替镜像、App 或 API 验收；
+- 用本地 Docker 构建检查代替镜像运行时、App 或 API 验收；
 - 因修复简单而顺手修改实现。
 
 执行要求：
@@ -184,58 +184,54 @@ TASK_SPEC:
 - Reviewer 自身 status=passed 只表示审查完整；被审阶段是否通过由 gates 决定。
 ```
 
-## 5. CPU Node Assembly Worker
+## 5. Image Build & Push Worker
 
 ```text
-角色：runtime
-负责阶段：在一个精确、已存在的 CPU Node 上组装候选镜像内容。Node 创建、停止和快照不是本角色的隐含权限；正式运行测试属于不可变镜像阶段。
+角色：image_builder
+负责阶段：构建候选镜像并推送到 Bohrium（本地 Docker build + `bohr image push`，或无 Docker 环境用 `bohr image build` 远端构建）。镜像构建和推送不是本角色的隐含权限；正式运行测试属于不可变镜像阶段。
 
 必须输入：
-- exact_node_id、project_id、expected_node_status；
-- source_or_artifact_identity、expected_runtime_inventory；
-- exact_share_path、snapshot_layout、allowed_write_paths、evidence_directory；
+- project_id、expected_image_name_and_tag（新的不可变版本 tag）；
+- source_or_artifact_identity、build_inputs（Dockerfile、wheel/bundle、.dockerignore）；
+- allowed_write_paths、evidence_directory；
 - authorized_external_actions；为空时只允许本地准备和平台只读查询。
 
 允许改动：
-- 授权 Node 内明确列出的安装或清理路径；
-- 本地 runtime evidence 和本阶段 handoff；
-- 只有授权动作明确包含时才可传输、安装或清理文件。
+- 本地构建目录中明确列出的 Dockerfile、wheel/bundle 和构建产物；
+- 本地 image evidence 和本阶段 handoff；
+- 只有授权动作明确包含时才执行 push 或远程 build。
 
 禁止动作：
-- 创建、停止或快照 Node；
-- 创建镜像、提交平台 Job、创建或修改 App；
-- 安装到未指定解释器或环境；
-- 依赖未记录的 shell activation 或 user site-packages；
-- 创建 SSH identity、临时 key、AccessKey 或自定义凭证路径；
-- 使用 `scp` 替代 Bohrium CLI 的项目 `share/` 传输；
-- 在 CPU Node 上运行完整科学、adapter 或资源测试矩阵；
-- 让候选镜像运行时依赖 `/share`、`/personal` 或 `/bohr`；
-- 在授权范围外清理 Node；
-- 输出节点密码或完整环境。
+- 创建、停止或快照 Node；不使用任何开发 Node 组装镜像；
+- 使用 `bohr file upload`/`share/` 传输、SSH identity、临时 key、AccessKey 或 `scp`；
+- 覆盖已有镜像 tag，或以新名称重推替代镜像；
+- 构建/推送超时后自动重试或提交重复 build；
+- 提交平台 Job、创建或修改 App；
+- 把凭证、shell 历史、HAR、测试 fixture 或私有数据 COPY 进镜像层，或经 `--build-arg` 传入秘密；
+- 在本地构建上运行完整运行时测试并当作验收。
 
 执行要求：
-1. 只读核对 Node ID、项目、状态、SKU 和 observed_at。
-2. 确认该 Node 为 CPU 规格；若创建阶段已明确失败，直接返回错误，不改选或重建 Node。
-3. 使用现有 CLI profile，通过 `bohr file upload ... share/... --project-id ...` 传输 artifact，并在读取前后校验 SHA-256。
-4. 将 artifact 复制或安装到 `/opt/app` 等普通镜像目录，核对绝对解释器、入口和声明版本。
-5. 只做组装检查，不跑完整运行测试；按授权完成 snapshot hygiene 并确认镜像内容不依赖挂载目录。
-6. 只保存最少、脱敏、可复核证据。
+1. 只读核对目标 project、目标 name:tag 不存在，以及 artifact/Dockerfile 的 SHA-256。
+2. 本地 `docker build`（配 `.dockerignore`）后用 `bohr image push <local_image> <name> --project-id ...` 推送；或用 `bohr image build --dockerfile ... --name ... --project-id ...` 远端构建（无 build context，仅 Dockerfile 文本 ≤64KiB）。
+3. 记录返回的 build ID 与 image identity（name:tag、image ID/digest），立即持久化并只读回查。
+4. 只做构建完整性检查（base、依赖、入口、声明版本），不跑完整运行测试。
+5. 只保存最少、脱敏、可复核证据。
 
 退出门禁：
-- runtime.node_identity
-- runtime.environment_inventory
-- runtime.artifact_integrity
-- runtime.share_transfer
-- runtime.install_destination
-- runtime.entry_identity
-- runtime.snapshot_hygiene
-- runtime.no_mount_dependency
-- runtime.secret_scan
+- image.tag_immutability
+- image.artifact_integrity
+- image.docker_build
+- image.push_completed
+- image.identity_persisted
+- image.identity_readback
+- image.build_hygiene
+- image.entry_identity
+- image.secret_scan
 
 返回格式：
-- 使用公共 agent result；role=runtime。
-- 返回 Node ID 和 observed_at，但不返回连接秘密。
-- 只能建议 node-ready，含义仅为候选镜像内容已组装；不得声明运行时已通过或 image-ready。
+- 使用公共 agent result；role=image_builder。
+- 返回 build ID 和 image identity，但不返回任何凭证。
+- 只能建议候选镜像已推送；不得声明运行时已通过或 image-ready。
 ```
 
 ## 6. Release Operator

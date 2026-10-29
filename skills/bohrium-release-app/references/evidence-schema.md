@@ -10,8 +10,8 @@ For every release record:
 - record artifact, schema and release-bundle SHA-256 values;
 - record previous accepted and candidate image identities; use a digest when
   available, otherwise record the immutable platform image ID;
-- record the CPU assembly Node, image-test Job, App version and API Job
-  identifiers when used;
+- record the image build ID, owning project ID, image-test Job, App version
+  and API Job identifiers when used;
 - store rollback image/version;
 - mark every gate `pending`, `passed`, `failed`, or `not_applicable`;
 - require at least one concise evidence reference for every passed gate;
@@ -22,9 +22,12 @@ Run the bundled auditor normally to inspect structural errors and blockers. Add
 `--require-ready` only when a workflow must fail unless every required gate is
 passed. Structural validity does not imply release readiness.
 
-Version 2 replaces the old `node_smoke`, `cleanup_resmoke` and
-`clean_image_job` gates with `node_assembly`, `snapshot_hygiene` and
-`image_runtime_tests`. It also renames `clean_image_job_id` to
-`image_test_job_id`. The auditor continues to accept version 1 ledgers as
-historical evidence, but new releases must use version 2 and must not infer
-image runtime acceptance from mutable-Node checks.
+Version 3 replaces the version 2 `node_assembly` and `snapshot_hygiene` gates
+with `image_build` and `image_push`, and renames the `node_id` identity field
+to `build_id`. The image is assembled by a local Docker build published with
+`bohr image push`, or built remotely with `bohr image build`; development
+Nodes, `bohr file upload` share transfers and on-Node snapshots are no longer
+release steps. The auditor accepts version 1 and version 2 ledgers as
+historical evidence, but new releases must use version 3 and must not infer
+image runtime acceptance from anything other than tests run against the
+pushed immutable image.

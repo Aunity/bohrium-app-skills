@@ -10,7 +10,10 @@
 
 ## Require explicit authority
 
-- create, start, stop or resize a Node;
+- build and publish an image (`bohr image push`, `bohr image build`) or
+  overwrite any existing image tag;
+- create, start, stop or resize a Node (legacy maintenance only; not part of
+  the image release route);
 - install or upgrade software in a shared or remote runtime;
 - snapshot, build, push, retag or delete an image;
 - submit, kill or delete a compute job;

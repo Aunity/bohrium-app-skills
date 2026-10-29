@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-SCHEMA = "bohrium-release-record/v2"
+SCHEMA = "bohrium-release-record/v3"
 STATUSES = {"pending", "passed", "failed", "not_applicable"}
 APP_TYPES = {"launching", "custom-web", "mcp", "combination"}
 COMMON_GATES = {
@@ -22,8 +22,10 @@ COMMON_GATES = {
 SCHEMA_GATES = {
     "bohrium-release-record/v1": COMMON_GATES
     | {"node_smoke", "cleanup_resmoke", "clean_image_job"},
-    SCHEMA: COMMON_GATES
+    "bohrium-release-record/v2": COMMON_GATES
     | {"node_assembly", "snapshot_hygiene", "image_runtime_tests"},
+    SCHEMA: COMMON_GATES
+    | {"image_build", "image_push", "image_runtime_tests"},
 }
 SENSITIVE_KEY = re.compile(
     r"(?i)(access.?key|authorization|cookie|node.?pwd|password|secret|token)"

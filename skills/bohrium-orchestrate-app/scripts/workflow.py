@@ -72,7 +72,6 @@ TRANSITIONS = {
 }
 CLAIM_STAGES = {
     "local_ready": "S4",
-    "node_ready": "S5",
     "image_ready": "S7",
     "app_ready": "S9",
     "api_ready": "S10",
@@ -478,7 +477,7 @@ def command_init(args: argparse.Namespace) -> int:
             handle.write((asset_root / "session-handoff.md").read_bytes())
             handle.flush()
             os.fsync(handle.fileno())
-        for category in ("local", "node", "image", "app", "api", "skill"):
+        for category in ("local", "image", "app", "api", "skill"):
             (state_path.parent / "evidence" / category).mkdir(parents=True)
         (state_path.parent / "handoffs").mkdir(parents=True)
     except Exception:

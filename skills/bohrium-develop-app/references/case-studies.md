@@ -11,16 +11,18 @@ upload/download E2E and an App operation skill.
 
 Kept a streaming scientific package independent from its Launching adapter.
 Demonstrated explicit representation semantics, partial-success results,
-traceable Node snapshot updates from wheels, a published schema and a redacted
-offline-plan-first operation skill. Its historical Node re-smoke is evidence,
-not the current generic default; runtime acceptance now belongs to the image.
+traceable image updates from wheels via the historical Node-snapshot route, a
+published schema and a redacted offline-plan-first operation skill. Its
+historical Node re-smoke is evidence, not the current generic default; runtime
+acceptance now belongs to the pushed immutable image.
 
 ## Multi-stage peptide-design workflow
 
 Combined a common multi-stage user journey while retaining independently
 submittable stages. Demonstrated GPU environment inventory, immutable stage
 Bundles, valid `no_candidates`, strong scientific disclaimers and the need to
-separate CPU Node image assembly, immutable-image acceptance, licenses and true
+separate image assembly (historical CPU-Node route, now `bohr image push`),
+immutable-image acceptance, licenses and true
 scientific benchmarks.
 
 ## Interactive molecular editor

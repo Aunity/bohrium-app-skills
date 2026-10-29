@@ -1,16 +1,18 @@
 # Recovery
 
-- Preserve the Node, image, App and job IDs immediately after creation.
+- Preserve the build, image, App and job IDs immediately after the operation
+  returns.
 - On local interruption, query existing state before taking another mutation.
-- If CPU Node creation returns a definite failure, report it and stop. Do not
-  retry creation or silently select a different Node. If creation outcome is
-  unknown, query only the same request or Node identity before reporting.
-- On snapshot timeout, search for the unique requested tag and continue
-  monitoring it; do not create a second image.
+- If an image build or push returns a definite failure, report it and stop.
+  Do not retry under a different name or silently re-run the operation.
+- If a build or push outcome is unknown (local timeout, Ctrl-C, lost
+  session), query the same object only: `bohr image status` for the build,
+  `bohr image get` / `bohr image list` for the exact name:tag, and
+  `bohr image build-log` for diagnostics. Never submit a duplicate build or
+  push a replacement name.
 - On job wait timeout, resume status/wait for the same job ID; do not resubmit.
 - On failed image-test or App jobs, compare exact image identity, entry,
   interpreter, saved schema/config and first failed event before modifying code.
-- On uncertain Node shutdown, query the same Node. Stop it only with authority.
 - On a bad deployment, route back to the last fully accepted immutable image
   and App version. Do not repair an old tag in place.
 - Treat delete as a separate explicit decision after recovery evidence is safe.

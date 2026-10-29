@@ -27,7 +27,6 @@
   "last_reconciled_at": null,
   "claims": {
     "local_ready": false,
-    "node_ready": false,
     "image_ready": false,
     "app_ready": false,
     "api_ready": false,
@@ -40,8 +39,8 @@
     "S2": {"name": "runtime_inventory_fixtures", "depends_on": ["S1"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
     "S3": {"name": "adapter_form_result_contract", "depends_on": ["S2"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
     "S4": {"name": "local_acceptance", "depends_on": ["S3"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
-    "S5": {"name": "cpu_node_image_assembly", "depends_on": ["S4"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
-    "S6": {"name": "immutable_image", "depends_on": ["S5"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S5": {"name": "image_build_and_push", "depends_on": ["S4"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
+    "S6": {"name": "immutable_image_identity", "depends_on": ["S5"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
     "S7": {"name": "image_runtime_tests", "depends_on": ["S6"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
     "S8": {"name": "app_draft_saved_configuration", "depends_on": ["S7"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
     "S9": {"name": "app_page_acceptance", "depends_on": ["S8"], "status": "pending", "owner": null, "evidence": [], "stale_evidence": [], "blockers": []},
@@ -54,7 +53,7 @@
   "pending_authorizations": [],
   "external_resources": {
     "project_id": null,
-    "node_id": null,
+    "build_id": null,
     "candidate_image_id": null,
     "candidate_image": null,
     "image_test_job_id": null,

@@ -1,14 +1,14 @@
 ---
 name: bohrium-release-app
-description: Audit, plan, execute, monitor, and document controlled Bohrium App releases across short-lived CPU build Nodes, immutable-image tests, Preview or reverse-proxy acceptance, App versions, License, OpenSDK, and rollback. Use when Codex is asked to prepare or perform a Bohrium Node snapshot, image publication, App deployment/update, release acceptance, or release recovery. Keep read-only planning separate from billable or state-changing operations and require explicit authority for each external mutation.
+description: Audit, plan, execute, monitor, and document controlled Bohrium App releases across image build-and-push, immutable-image tests, Preview or reverse-proxy acceptance, App versions, License, OpenSDK, and rollback. Use when Codex is asked to prepare or perform an image publication, App deployment/update, release acceptance, or release recovery. Keep read-only planning separate from billable or state-changing operations and require explicit authority for each external mutation.
 ---
 
 # Bohrium Release App
 
 Release a locally accepted Bohrium App through explicit, recoverable gates.
-Use a CPU Node to assemble the candidate image, then test the immutable image.
-Treat source, image runtime, App page, API, license, and scientific claims as
-separate evidence layers.
+Build and push the candidate image (`bohr image push` or `bohr image build`),
+then test the immutable image. Treat source, image runtime, App page, API,
+license, and scientific claims as separate evidence layers.
 
 ## Workflow
 
@@ -26,11 +26,11 @@ separate evidence layers.
    [authorization-and-secrets.md](references/authorization-and-secrets.md).
 5. Complete local source, tests, schema and artifact-integrity gates. Build a
    versioned wheel or immutable bundle and record its SHA-256.
-6. For a Node snapshot route, follow
-   [node-snapshot-workflow.md](references/node-snapshot-workflow.md). Create a
-   CPU Node, upload artifacts with `bohr file upload` to the project `share/`
-   path, and use the Node only to assemble the image. Do not create SSH keys or
-   run the full runtime test suite on the Node.
+6. Build and publish the image with
+   [image-push-workflow.md](references/image-push-workflow.md): build locally
+   with Docker and publish with `bohr image push`, or build remotely from a
+   Dockerfile with `bohr image build`. Never overwrite an existing tag, and
+   read the pushed image identity back before testing.
 7. After an image is immutable and available, follow
    [image-and-app-acceptance.md](references/image-and-app-acceptance.md). Run
    the required remote runtime tests against that exact image before testing
@@ -66,8 +66,6 @@ step.
 Use precise claims:
 
 - `local-ready`: local source, tests, schemas and artifacts are accepted.
-- `node-ready`: a CPU staging Node received the verified artifact and assembled
-  snapshot-ready contents; this is not runtime acceptance.
 - `image-ready`: a new immutable image passed the required image-based runtime tests.
 - `app-ready`: saved App configuration and human-facing surface passed acceptance.
 - `api-ready`: License, submit, status, logs and download passed a minimal E2E.
@@ -80,7 +78,7 @@ Do not call a release production-ready when required gates remain `pending`,
 ## Completion report
 
 Report the route, authorized mutations actually performed, immutable source and
-artifact identities, Node/image/App/job IDs, gate states, Node final state,
-rollback target, redacted result locations, unresolved blockers and safe next
-operation. Explicitly distinguish user action still required in the Bohrium
-console from work already verified.
+artifact identities, build/image/App/job IDs, gate states, rollback target,
+redacted result locations, unresolved blockers and safe next operation.
+Explicitly distinguish user action still required in the Bohrium console from
+work already verified.

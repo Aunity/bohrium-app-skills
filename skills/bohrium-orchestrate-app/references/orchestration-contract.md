@@ -24,7 +24,7 @@
 | `docs/bohrium/release-record.json` | 当前唯一 Release Operator |
 | `docs/bohrium/handoffs/<task-id>.md` | 对应 Worker，仅新建不覆盖 |
 | 源码、Schema、测试、文档 | 获得精确路径锁的 Worker |
-| Node、镜像、Job、App、License、公开状态 | 当前唯一 Release Operator |
+| 镜像（build/push）、Job、App、License、公开状态 | 当前唯一 Release Operator |
 
 同一路径不能有两个写 Worker。只读 Worker 可以共享输入。所有平台 mutation 共用一个全局锁；一次授权只覆盖一个写明 exact target、effect、cost、rollback 和 evidence 的动作。
 
@@ -43,9 +43,10 @@
 - Worker 有结果文件：校验后进入 ingest；
 - 只有局部文件变化：标记 `partial`，复核后用新 attempt 重派；
 - 无结果且无变化：标记 `abandoned`，释放路径锁后重派；
-- CPU Node 创建明确失败：停止并报告，不自动重试或改选另一 Node；
-- Node、Image、Job 或 App 状态不确定：先查询同一 request 或 ID；
-- snapshot 超时：按唯一 tag 恢复，禁止再次创建；
+- 镜像构建或推送明确失败：停止并报告，不自动重试、不换名重推；
+- Image、Job 或 App 状态不确定：先查询同一 build/name:tag 或 ID
+  （`bohr image status`、`bohr image build-log`）；
+- build/push 超时：按唯一 name:tag 只读对账，禁止重推替代名称或重复构建；
 - Job 等待超时：恢复同一 Job ID，禁止重新提交；
 - 外部对象无法唯一解析：进入 `blocked`，不猜测、不执行新 mutation。
 
@@ -137,7 +138,7 @@ Worker 状态只使用 `passed`、`partial`、`blocked` 或 `failed`；其中 `p
 ## Skill 路由
 
 - Discovery、Adapter、本地验收和工程 Reviewer：`$bohrium-develop-app`
-- CPU Node 镜像组装、不可变镜像测试、App、License、API 和发布：`$bohrium-release-app`
+- 镜像构建与推送、不可变镜像测试、App、License、API 和发布：`$bohrium-release-app`
 - App-specific Skill：`$bohrium-create-app-skill`；需要初始化或修改 Skill 包时再使用 `$skill-creator`
 
 主 Agent在任务信封和 prompt 中显式点名所需 Skill。不要让一个 Worker 同时跨越开发、发布和 Skill 化权限边界。

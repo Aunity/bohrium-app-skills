@@ -2,8 +2,8 @@
 
 ## Immutable-image runtime tests
 
-Run remote runtime acceptance against the exact new immutable image, not the
-mutable CPU Node used to assemble it. Start with the cheapest representative
+Run remote runtime acceptance against the exact pushed immutable image, not
+the local Docker build that produced it. Start with the cheapest representative
 job and expand only to the public methods, changed paths, input modes and
 resource probes required by the App contract. Verify cold start, absolute entry
 and interpreter, declared dependencies, absence of runtime dependencies on

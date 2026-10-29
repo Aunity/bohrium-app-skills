@@ -1,6 +1,6 @@
 ---
 name: bohrium-orchestrate-app
-description: Orchestrate a Bohrium App from program discovery through adapter implementation, local review, Node and image release, App configuration and acceptance, License/OpenSDK checks, publication, and App-specific skillization by supervising bounded sub-agents across multiple sessions. Use when a main Codex agent must coordinate, verify, resume, or audit an end-to-end Bohrium App delivery without placing all work in one session. Do not use merely to operate jobs for an already published App.
+description: Orchestrate a Bohrium App from program discovery through adapter implementation, local review, image build and release, App configuration and acceptance, License/OpenSDK checks, publication, and App-specific skillization by supervising bounded sub-agents across multiple sessions. Use when a main Codex agent must coordinate, verify, resume, or audit an end-to-end Bohrium App delivery without placing all work in one session. Do not use merely to operate jobs for an already published App.
 ---
 
 # Bohrium Orchestrate App
@@ -63,15 +63,15 @@ advance gates only through the workflow state tool.
 Route stages to existing skills:
 
 - Discovery, adapter and local validation: `$bohrium-develop-app`.
-- Node, image, Job, App, License and publication: `$bohrium-release-app`.
+- Image build/push, Job, App, License and publication: `$bohrium-release-app`.
 - Published-App operation skill: `$bohrium-create-app-skill`, then
   `$skill-creator` for its package.
 
-For the Node-snapshot route, S5 uses one short-lived CPU Node only to assemble
-the candidate image. Transfer artifacts with `bohr file upload` through the
-project `share/` path and the existing CLI profile; never create SSH identities,
-temporary keys or custom credentials. S7, not S5, runs remote runtime tests
-against the immutable image.
+For the image route, S5 builds and publishes the candidate image: a local
+Docker build published with `bohr image push`, or a remote build with
+`bohr image build`. Use an existing CLI profile; never create SSH identities,
+temporary keys or custom credentials, and never overwrite an existing tag.
+S7, not S5, runs remote runtime tests against the immutable image.
 
 ## Supervise and ingest
 
@@ -98,7 +98,7 @@ against the immutable image.
 
 ## Handle external mutations
 
-Before Node, image, Job, App, License, price or publication changes:
+Before image build/push, Job, App, License, price or publication changes:
 
 1. Resolve the exact current target with read-only checks.
 2. Present action, target, effect, expected cost/duration, recovery and evidence
@@ -109,9 +109,11 @@ Before Node, image, Job, App, License, price or publication changes:
 5. On timeout or interruption, keep the mutation active and query the same ID
    or unique tag. Do not create or submit a replacement automatically.
 
-If CPU Node creation returns a definite failure, stop the stage and report the
-error immediately. Do not retry creation or select another Node. If the outcome
-is unknown, query only the same request or Node identity before stopping.
+If an image build or push returns a definite failure, stop the stage and
+report the error immediately. Do not retry under a different name or push a
+replacement. If the outcome is unknown, query only the same build or
+name:tag identity (`bohr image status`, `bohr image build-log`) before
+stopping.
 
 Login and verification challenges are human checkpoints. Generate a complete
 console handoff, mark the stage `awaiting_human`, and resume with read-only
@@ -129,7 +131,7 @@ Stop and hand control to the user only when:
 - every applicable gate has passed.
 
 At every stop, run `workflow.py check`, write a new handoff, and report the exact
-claim reached (`local-ready`, `node-ready`, `image-ready`, `app-ready`,
+claim reached (`local-ready`, `image-ready`, `app-ready`,
 `api-ready`, `release-ready` or `skill-ready`) plus one next action. Never use
 the unqualified phrase “released” while required gates remain pending.
 

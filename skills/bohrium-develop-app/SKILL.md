@@ -67,7 +67,7 @@ for success at another.
 
 Perform source inspection, local tests, schema generation, offline plans, and
 read-only platform queries when they are in scope. Require explicit authority
-before creating or stopping Nodes, installing into shared environments,
+before building or pushing images, creating or stopping Nodes, installing into shared environments,
 submitting compute, snapshotting or pushing images, changing App versions,
 altering License or price, publishing, killing jobs, or deleting anything.
 

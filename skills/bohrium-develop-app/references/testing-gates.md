@@ -8,7 +8,7 @@
 | Direct scientific CLI | target executable and system dependencies | adapter correctness |
 | Adapter JSON replay | real command and output contract | immutable image or saved App config |
 | Preview | actual form layout and conditional fields | computation, License or API |
-| CPU Node assembly | artifact transfer, install path and snapshot contents | immutable-image runtime behavior |
+| Image build & push | reviewed Dockerfile, successful build, pushed immutable identity | immutable-image runtime behavior |
 | Immutable-image runtime tests | cold start, entry, dependencies, public methods and output return | App page schema or License |
 | App page test | saved form, resource and report behavior | programmatic API behavior |
 | OpenSDK schema | App key, deployment, submodel and License visibility | upload, compute or download |
@@ -20,7 +20,7 @@ public method, each input mode, conditional on/off cases, invalid input,
 timeout/termination, target resource, artifact validation and secret scanning.
 
 Do not execute that complete matrix at every layer. Run logic and adapter tests
-locally, use a CPU Node only to assemble a snapshot, and run the required remote
+locally, build and push the image once, and run the required remote
 runtime matrix from the exact immutable image. Later App-page and API checks
 should use minimal interface canaries unless a changed interface transforms the
 scientific input or selects a different image.

@@ -38,7 +38,7 @@
 - Local unit and integration gates:
 - Direct scientific smoke:
 - Schema/Preview or Web/MCP client checks:
-- CPU Node assembly and immutable-image runtime tests:
+- Image build & push and immutable-image runtime tests:
 - App-page and API checks:
 - Security, license and scientific acceptance:
 - Rollback target and unresolved blockers:
